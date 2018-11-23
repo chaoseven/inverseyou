@@ -6,6 +6,7 @@ using System.Text;
 
 namespace inverseyou.ddd.Entities
 {
+    [Serializable]
     public class User:Entity
     {
         private User() { }

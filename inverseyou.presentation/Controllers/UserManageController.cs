@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace inverseyou.presentation.Controllers
 {
-    public class UserInfoManageController : Controller
+    public class UserManageController : Controller
     {
         [HttpGet]
         public IActionResult UserInfoEdit()
