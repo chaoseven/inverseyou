@@ -132,6 +132,16 @@ namespace inverseyou.infra.Repositories
 
         void IUserRepository.SaveUserInfo(User user)
         {
+            var invUser = _baseRepository.Inv_User.FirstOrDefault(u => u.Id == user.Id);
+            if (invUser != null)
+            {
+                invUser.Email = user.Email;
+                invUser.MobileNumber = user.MobileNumber;
+                invUser.Password = user.Password;
+                invUser.AccountStatusCode = (int)user.AccountStatusCode;
+                invUser.AccountStatusText = user.AccountStatusText;
+            }
+            (this as IRepository).SaveChanges();
         }
 
         void IRepository.SaveChanges()
