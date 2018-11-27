@@ -79,5 +79,52 @@ namespace inverseyou.presentation.Controllers
             await HttpContext.SignOutAsync();
             return RedirectToAction("Login", "Auth");
         }
+
+        public IActionResult EmailComfirm(string name,string token)
+        {
+            var isValid = _authService.EmailComfirm(name, token, out Exception ex);
+            if (isValid == false)
+            {
+                return Content("Error");
+            }
+            else
+            {
+                return Content("OK");
+            }
+        }
+
+        #region Mock
+
+        public IActionResult MockRegister()
+        {
+            RegisterUser user = new RegisterUser
+            {
+                Name = "mock_1",
+                BirthDay = DateTime.Now,
+                Email = "11@qq.com",
+                MobileNumber = "11111111",
+                Password = "123456",
+                GenderCode = ddd.Values.Gender.Male
+            };
+
+            if (ModelState.IsValid)
+            {
+                _authService.RegisterNewUser(user, out Exception ex);
+                if (ex == null)
+                {
+                    return new JsonResult(new AjaxReponseResult(ResponseState.Sucess, null, null));
+                }
+                else
+                {
+                    return new JsonResult(new AjaxReponseResult(ResponseState.Fail, null, "注册失败"));
+                }
+            }
+            else
+            {
+                return new JsonResult(new AjaxReponseResult(ResponseState.Fail, null, "注册信息不符合要求"));
+            }
+        }
+
+        #endregion
     }
 }

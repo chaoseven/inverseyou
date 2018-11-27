@@ -1,0 +1,2 @@
+﻿items in this project SHOULD NOT reference any other project of the solution to avoid circle reference.
+items in this project are just extensions or tools to help business process,therefore they are referenced and should not reference any other project of the solution.

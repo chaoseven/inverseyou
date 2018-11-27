@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace inverseyou.utility.extension
+namespace inverseyou.extensions
 {
     public static class EnumExtensions
     {

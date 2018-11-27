@@ -1,15 +1,14 @@
 ﻿using inverseyou.ddd.Values;
-using inverseyou.utility.extension;
+using inverseyou.extensions;
+using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace inverseyou.ddd.Entities
 {
     [Serializable]
     public class User:Entity
     {
-        private User() { }
+        public User() { }
         
         public string Name { get; set; }
         public DateTime BirthDay { get; set; }
@@ -48,7 +47,7 @@ namespace inverseyou.ddd.Entities
                 ||string.IsNullOrEmpty(mobileNumber)
                 || string.IsNullOrEmpty(password))
             {
-                throw new ArgumentNullException("用户信息不完整");
+                throw new ArgumentNullException("注册信息不符合要求");
             }
             return new User
             {
@@ -86,9 +85,9 @@ namespace inverseyou.ddd.Entities
             };
         }
 
-        public void ChangeAccountStatus(UserAccountStatus accountStatusCode)
+        public void ActiveUserAccount()
         {
-            AccountStatusCode = accountStatusCode;
+            AccountStatusCode = UserAccountStatus.Normal;
         }
     }
 }

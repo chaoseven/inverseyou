@@ -1,6 +1,10 @@
 ﻿using inverseyou.ddd.Repositories;
 using inverseyou.infra.Repositories;
+using inverseyou.infra.Services.AuthServices;
+using inverseyou.infra.Services.CacheServices;
+using inverseyou.infra.Services.EncryptionServices;
 using inverseyou.presentation.Services;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace inverseyou.presentation
 {
@@ -42,9 +47,14 @@ namespace inverseyou.presentation
                     options.ExpireTimeSpan = new System.TimeSpan(0, 3, 0);
                     options.SlidingExpiration = true;
                 });
+            services.AddMemoryCache();
+            services.AddMediatR();
+            services.AddSingleton<ICacheService, MemoryCache>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<EFBaseRepository>();
             services.AddTransient<AuthService>();
+            services.AddTransient<EncryptionManage>();
+            services.AddTransient<UserRegisterService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

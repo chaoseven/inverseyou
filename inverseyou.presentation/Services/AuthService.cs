@@ -1,16 +1,24 @@
 ﻿using inverseyou.ddd.Entities;
 using inverseyou.ddd.Repositories;
+using inverseyou.infra.Services.AuthServices;
+using inverseyou.infra.Services.EncryptionServices;
 using inverseyou.presentation.Models;
 using System;
+using System.Collections.Generic;
 
 namespace inverseyou.presentation.Services
 {
     public class AuthService
     {
         private IUserRepository _userRepository;
-        public AuthService(IUserRepository userRepository)
+        private UserRegisterService _userRegisterService;
+        private readonly EncryptionManage _encryptionManage;
+
+        public AuthService(IUserRepository userRepository,UserRegisterService userRegisterService,EncryptionManage encryptionManage)
         {
             _userRepository = userRepository;
+            _userRegisterService = userRegisterService;
+            _encryptionManage = encryptionManage;
         }
 
         public void RegisterNewUser(RegisterUser user,out Exception exception)
@@ -18,13 +26,39 @@ namespace inverseyou.presentation.Services
             exception = null;
             try
             {
-                var newUser = User.CreateNewUser(user.Name, user.BirthDay, user.Email, user.MobileNumber, user.Password, user.GenderCode);
+                var newUser = User.CreateNewUser(user.Name.Trim(), user.BirthDay, user.Email, user.MobileNumber, user.Password, user.GenderCode);
                 _userRepository.AddNewUser(newUser);
+                var token = _encryptionManage.Encrypt(new Dictionary<string, string> { { "Name",user.Name.Trim()},{ "ExpTime",DateTime.Now.AddMinutes(3).ToString()} });
+                _userRegisterService.SendValidationEmail(user.Name, token);
             }
             catch(Exception ex)
             {
                 exception = ex;
             }
+        }
+
+        public bool EmailComfirm(string name,string token,out Exception ex)
+        {
+            var isValid = _userRegisterService.ValidationUserEmail(name, token,out ex);
+            if (isValid == true)
+            {
+                var user = _userRepository.GetUserByName(name);
+                if (user != null)
+                {
+                    ActiveUserAccount(user.Id);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        public void ActiveUserAccount(int id)
+        {
+            _userRegisterService.ActiveUserAccount(id);
         }
 
         public RegisterUser LoginUser(LoginUser user,out Exception exception)
