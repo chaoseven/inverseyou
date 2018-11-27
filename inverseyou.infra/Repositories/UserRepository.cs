@@ -76,11 +76,6 @@ namespace inverseyou.infra.Repositories
             (this as IRepository).SaveChanges();
         }
 
-        void IUserRepository.ChangeUserAccountStatus(User user)
-        {
-            _baseRepository.Inv_User.FirstOrDefault(u => u.Id == user.Id);
-        }
-
         User IUserRepository.GetUserById(int userId)
         {
             User user = null;
@@ -135,9 +130,8 @@ namespace inverseyou.infra.Repositories
             return result;
         }
 
-        void IUserRepository.UpdateUserBasicInfo(User user)
+        void IUserRepository.SaveUserInfo(User user)
         {
-            throw new NotImplementedException();
         }
 
         void IRepository.SaveChanges()

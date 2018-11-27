@@ -45,7 +45,8 @@ namespace inverseyou.presentation.Services
                 var user = _userRepository.GetUserByName(name);
                 if (user != null)
                 {
-                    ActiveUserAccount(user.Id);
+                    user.ActiveUserAccount();
+                    _userRepository.SaveUserInfo(user);
                     return true;
                 }
                 else

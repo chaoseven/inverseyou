@@ -16,8 +16,6 @@ namespace inverseyou.ddd.Repositories
 
         User GetUserByNameAndPwd(string name, string pwd);
 
-        void UpdateUserBasicInfo(User user);
-
-        void ChangeUserAccountStatus(User user);
+        void SaveUserInfo(User user);
     }
 }
